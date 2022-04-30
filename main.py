@@ -1,6 +1,7 @@
 import pygame
 import random
 import math
+from pygame import mixer
 
 # initialise the pygame
 pygame.init()
@@ -8,9 +9,12 @@ pygame.init()
 # create the screen
 screen = pygame.display.set_mode((800,600))
 
-# background image
+# background image (800 x 600)
 bg = pygame.image.load('assets/bg1.png')
 
+# background sound
+mixer.music.load('assets/background.wav')
+mixer.music.play(-1)
 
 
 # Title & Icon
@@ -50,7 +54,13 @@ bulletY_change = 2      # bullet speed
 bullet_state = 'ready' # can fire -> cant see bullet on screen
 
 #score
-score = 0
+score_value = 0
+font = pygame.font.Font('freesansbold.ttf',28)
+textX,textY = 10,10
+
+def showScore(x,y):
+    score = font.render("Score : "+ str(score_value),True,(255,255,255))
+    screen.blit(score,(x,y))
 
 def player(x,y):
     screen.blit(playerImg,(x,y))
@@ -89,6 +99,8 @@ while running:
                 playerX_change = 0.5
             if event.key == pygame.K_SPACE:
                 if bullet_state == 'ready':
+                    bullet_sound = mixer.Sound('assets/laser.wav')
+                    bullet_sound.play()
                     bulletX = playerX
                     fire(bulletX,bulletY)
         if event.type == pygame.KEYUP:
@@ -117,10 +129,11 @@ while running:
         # collision
         colli = collision(enemyX[i], enemyY[i], bulletX, bulletY)
         if colli:
+            explosion_sound = mixer.Sound('assets/explosion.wav')
+            explosion_sound.play()
             bulletY = 480
             bullet_state = "ready"
-            score += 5
-            print(score)
+            score_value += 5
             enemyX[i] = random.randint(0, 735)
             enemyY[i] = random.randint(50, 100)
 
@@ -136,5 +149,5 @@ while running:
 
 
     player(playerX,playerY)
-
+    showScore(textX,textY)
     pygame.display.update()
