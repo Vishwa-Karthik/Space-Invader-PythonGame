@@ -23,3 +23,15 @@ screen = pygame.display.set_mode(size)
 ```python
 pygame.image.load('filename.format')
 ```
+
+### Background music
+ ```bash
+ from pygame import mixer
+ ```
+ #### Add music via code
+ 
+ ```python
+mixer.music.load('bgmusic.wav')
+mixer.music.play(-1)
+```
+
